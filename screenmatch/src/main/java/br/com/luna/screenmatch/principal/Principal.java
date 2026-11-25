@@ -56,12 +56,33 @@ public class Principal {
         LocalDate data = LocalDate.parse(String.format("%d-01-01", ano));
         System.out.println("Data de nascimento: " + data);
 
-        playerstoshow.stream()
-                .filter(player -> player.bornConverted().isAfter(data))
-                .forEach(player -> {
-                    System.out.println("Nome: " + player.name() + " Ano de nascimento: " +
-                            player.bornConverted().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                });
+//        playerstoshow.stream()
+//                .peek(System.out::println)
+//                .filter(player -> player.bornConverted().isAfter(data))
+//                .peek(e -> System.out.println("Primeiro filtro (data de nascimento)" + e))
+//                .map(player -> player.name().toUpperCase())
+//                .peek(e -> System.out.println("Deixando maiúscilo: " + e))
+//                .forEach(System.out::println);
+
+        System.out.println("Pesquise um jogador: ");
+        var trecho = sc.nextLine();
+
+        Optional<Player> found = playerstoshow.stream()
+                .filter(p -> p.name().toLowerCase().contains(trecho.toLowerCase()))
+                .findFirst();
+
+        if (found.isPresent()) {
+            System.out.println("JOgador encontrado");
+            System.out.println("Nome: " + found.get().name());
+        }else{
+            System.out.println("JOgador nao encontrado");
+        }
+
+        DoubleSummaryStatistics est = playerstoshow.stream()
+                .filter(p -> p.wageConverted() > 0)
+                .collect(Collectors.summarizingDouble(Player::wageConverted));
+
+        System.out.println(est);
 
     }
 }
